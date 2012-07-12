@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>New Web Project</title>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>  
+  
+   <script>
+		      window.onload = function() {
+		        var canvas = document.getElementById("picture");
+		        var context = canvas.getContext("2d");
+		        var imageObj = new Image();
+		       
+		        imageObj.onload = function() {
+		          //context.drawImage(imageObj, 0, 0,500,500);
+		        };
+		        imageObj.src = "test.jpg";
+		        console.log("c1");
+		        alpha();
+		        console.log("c3");
+		      };
+		     
+		     function alpha(){
+		     	console.log("c2");
+		     	var canvas = document.getElementById("picture");
+		        var ctx = canvas.getContext("2d");
+		        var imageObj = new Image();
+		        
+		        var imageData = ctx.getImageData(0, 0, 500, 500),
+			    data = imageData.data,
+			    len = data.length;
+				console.log(len);
+				for (var i = 0; i < len; i += 4){
+					
+					if(data[i]<200){
+						
+						data[i]=155;
+					}
+				// data[i] = buffer[i];
+				 //data[i + 1] = buffer[i + 1];
+				 //data[i + 2] = buffer[i + 2];
+				 
+				}
+				
+				ctx.putImageData(imageData, 0, 0);
+				console.log("c2");
+		     }
+			
+		    </script>
+  
+  
+  
+    </head>
+    <body>
+        <h1>New Web Project Page</h1>
+        <canvas id="picture" width="500" height="500" ></canvas>
+		   
+    </body>
+</html>

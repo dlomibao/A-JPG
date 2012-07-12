@@ -1,0 +1,201 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+
+
+
+<script src="base64.js" type="text/javascript"></script>
+<script src="canvas2image.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+
+// setup our test canvas
+// and a simple drawing function
+window.onload = function() {
+
+	var bMouseIsDown = false;
+	
+	var oCanvas = document.getElementById("thecanvas");
+	var oCtx = oCanvas.getContext("2d");
+
+	var iWidth = oCanvas.width;
+	var iHeight = oCanvas.height;
+
+	oCtx.fillStyle = "rgb(255,255,255)";
+	oCtx.fillRect(0,0,iWidth,iHeight);
+
+	oCtx.fillStyle = "rgb(255,0,0)";
+	oCtx.fillRect(20,20,30,30);
+
+	oCtx.fillStyle = "rgb(0,255,0)";
+	oCtx.fillRect(60,60,30,30);
+
+	oCtx.fillStyle = "rgb(0,0,255)";
+	oCtx.fillRect(100,100,30,30);
+
+	oCtx.beginPath();
+	oCtx.strokeStyle = "rgb(255,0,255)";
+	oCtx.strokeWidth = "4px";
+
+	oCanvas.onmousedown = function(e) {
+		bMouseIsDown = true;
+		iLastX = e.clientX - oCanvas.offsetLeft + (window.pageXOffset||document.body.scrollLeft||document.documentElement.scrollLeft);
+		iLastY = e.clientY - oCanvas.offsetTop + (window.pageYOffset||document.body.scrollTop||document.documentElement.scrollTop);
+	}
+	oCanvas.onmouseup = function() {
+		bMouseIsDown = false;
+		iLastX = -1;
+		iLastY = -1;
+	}
+	oCanvas.onmousemove = function(e) {
+		if (bMouseIsDown) {
+			var iX = e.clientX - oCanvas.offsetLeft + (window.pageXOffset||document.body.scrollLeft||document.documentElement.scrollLeft);
+			var iY = e.clientY - oCanvas.offsetTop + (window.pageYOffset||document.body.scrollTop||document.documentElement.scrollTop);
+			oCtx.moveTo(iLastX, iLastY);
+			oCtx.lineTo(iX, iY);
+			oCtx.stroke();
+			iLastX = iX;
+			iLastY = iY;
+		}
+	}
+
+	function showDownloadText() {
+		document.getElementById("buttoncontainer").style.display = "none";
+		document.getElementById("textdownload").style.display = "block";
+	}
+
+	function hideDownloadText() {
+		document.getElementById("buttoncontainer").style.display = "block";
+		document.getElementById("textdownload").style.display = "none";
+	}
+
+	function convertCanvas(strType) {
+		if (strType == "PNG")
+			var oImg = Canvas2Image.saveAsPNG(oCanvas, true);
+		if (strType == "BMP")
+			var oImg = Canvas2Image.saveAsBMP(oCanvas, true);
+		if (strType == "JPEG")
+			var oImg = Canvas2Image.saveAsJPEG(oCanvas, true);
+
+		if (!oImg) {
+			alert("Sorry, this browser is not capable of saving " + strType + " files!");
+			return false;
+		}
+
+		oImg.id = "canvasimage";
+
+		oImg.style.border = oCanvas.style.border;
+		oCanvas.parentNode.replaceChild(oImg, oCanvas);
+
+		showDownloadText();
+	}
+
+	function saveCanvas(pCanvas, strType) {
+		var bRes = false;
+		if (strType == "PNG")
+			bRes = Canvas2Image.saveAsPNG(oCanvas);
+		if (strType == "BMP")
+			bRes = Canvas2Image.saveAsBMP(oCanvas);
+		if (strType == "JPEG")
+			bRes = Canvas2Image.saveAsJPEG(oCanvas);
+
+		if (!bRes) {
+			alert("Sorry, this browser is not capable of saving " + strType + " files!");
+			return false;
+		}
+	}
+
+	document.getElementById("savepngbtn").onclick = function() {
+		saveCanvas(oCanvas, "PNG");
+	}
+	document.getElementById("savebmpbtn").onclick = function() {
+		saveCanvas(oCanvas, "BMP");
+	}
+	document.getElementById("savejpegbtn").onclick = function() {
+		saveCanvas(oCanvas, "JPEG");
+	}
+
+	document.getElementById("convertpngbtn").onclick = function() {
+		convertCanvas("PNG");
+	}
+	document.getElementById("convertbmpbtn").onclick = function() {
+		convertCanvas("BMP");
+	}
+	document.getElementById("convertjpegbtn").onclick = function() {
+		convertCanvas("JPEG");
+	}
+
+	document.getElementById("resetbtn").onclick = function() {
+		var oImg = document.getElementById("canvasimage");
+		oImg.parentNode.replaceChild(oCanvas, oImg);
+
+		hideDownloadText();
+	}
+
+}
+</script>
+
+
+<title>Convert png24 to jpeg+alphamask</title>
+
+<style>
+
+#cse-search-box input[type="submit"] {
+  font-family : Trebuchet MS, sans-serif;
+  background-color: #20282A; color: #d1d1d1; font-weight:bold; border: 1px solid #747E7F;
+}
+
+#cse-search-box input[type="text"] {
+  font-family : Trebuchet MS, sans-serif;
+  height : 16px;
+  position : relative;
+  top : 1px;
+}
+
+</style>
+
+</head>
+<body>
+             <div class="post hentry uncustomized-post-template">
+                <h3 class="post-title entry-title">
+                  Convert png24 to jpg+alpha mask               </h3>
+                <div class="post-body entry-content">
+
+
+<canvas width="200" height="200" style="border:1px solid black;" id="thecanvas"></canvas>
+
+<br/><br/>
+<div id="textdownload" style="display:none;font-style:italic;">Now you can right click and download the image<br/>
+<input type="button" id="resetbtn" value="Reset">
+</div>
+
+<div id="buttoncontainer" style="display:block;">
+<input type="button" id="savepngbtn" value="Save PNG">
+<input type="button" id="convertpngbtn" value="Convert to PNG">
+<br/>
+<input type="button" id="savebmpbtn" value="Save BMP">
+<input type="button" id="convertbmpbtn" value="Convert to BMP">
+<br/>
+<input type="button" id="savejpegbtn" value="Save JPEG">
+<input type="button" id="convertjpegbtn" value="Convert to JPEG">
+
+</div>
+<br/>
+
+                <div class="post-footer">
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+
+  </div>
+
+</body>
+</html>

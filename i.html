@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <script type="text/javascript">
+    
+      //Global variables
+      var picWidth = 800; // width of the canvas
+      var picHeight = 800; // height of the canvas
+      var picLength = picWidth * picHeight; // number of chunks
+      var myImage = new Image(); // Create a new blank image.
+      var mask = new Image();
+      var alphaA=new Array();
+      // Load the image and display it.
+      function displayImage() {
+
+        // Get the canvas element.
+        canvas = document.getElementById("myCanvas");
+
+        // Make sure you got it.
+        if (canvas.getContext) {
+
+          // Specify 2d canvas type.
+          ctx = canvas.getContext("2d");
+          
+          
+          
+
+          // When the image is loaded, draw it.
+          myImage.onload = function() {
+          	
+          	alphaA=getAlphaData();
+          	
+            // Load the image into the context.
+            ctx.drawImage(myImage, 0, 0);
+            //getColorData();
+
+            // Get and modify the image data.
+            //getColorData();
+
+            // Put the modified image back on the canvas.
+            putColorData();
+          }
+
+          // Define the source of the image.
+          // This file must be on your machine in the same folder as this web page.
+          myImage.src = "udL.jpg";
+          mask.src = "udL_m.jpg";
+        }
+      }
+	  function getAlphaData(){
+	  	mask.src = "udL_m.jpg";
+	  	ctx.drawImage(mask,0,0);
+	  	mask = ctx.getImageData(0, 0, 800, 800);
+	  	for (var i = 0; i < picLength * 4; i += 4) {
+	  		
+				alphaA[i+3]=mask.data[i];
+			
+	  	}
+	  	return alphaA;
+	  	
+	  }
+      function getColorData() {
+
+        myImage = ctx.getImageData(0, 0, 800, 800);
+
+        // Loop through data.
+        for (var i = 0; i < picLength * 4; i += 4) {
+			//if(myImage.data[i]>150 && myImage.data[i+1]>150 && myImage.data[i+2]<150)
+			//{
+				//myImage.data[i] = 0;
+				myImage.data[i+3]=alphaA[i+3];
+			//}
+          // First bytes are red bytes.        
+          // Remove all red.
+          
+
+          // Second bytes are green bytes.
+          // Third bytes are blue bytes.
+          // Fourth bytes are alpha bytes
+        }
+      	putColorData();
+      }
+
+      function putColorData() {
+
+        ctx.putImageData(myImage, 0, 0);
+      }
+      
+      function noPhoto() {
+      
+        alert("Please put a .png file in this folder and name it test.png.");
+        
+        }        
+
+    </script>
+  </head>
+  
+  <body onload="displayImage()" style="background-color:grey;">
+    <h1>
+      Alpha Jpeg Canvas tests
+    </h1>
+    <p>
+      Click image to apply alpha transparency
+    </p>
+    <img id="myPhoto" src="ud24L.png" onerror="noPhoto()">
+    <canvas id="myCanvas" width="800" height="800" onclick="getColorData()">
+    	<img src='toucanm.jpg'></img>
+    </canvas>
+    <p>
+      
+    </p>
+  </body>
+
+</html>
