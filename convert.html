@@ -15,10 +15,11 @@
 // setup our test canvas
 // and a simple drawing function
 window.onload = function() {
+	ajpg('dino');
 
 	var bMouseIsDown = false;
 	
-	var oCanvas = document.getElementById("thecanvas");
+	var oCanvas =document.getElementById("thecanvas");
 	var oCtx = oCanvas.getContext("2d");
 
 	var iWidth = oCanvas.width;
@@ -156,9 +157,9 @@ window.onload = function() {
 }
 
 </style>
-
+<script src="ajpg.js"></script>
 </head>
-<body>
+<body >
              <div class="post hentry uncustomized-post-template">
                 <h3 class="post-title entry-title">
                   Convert png24 to jpg+alpha mask               </h3>
@@ -166,6 +167,7 @@ window.onload = function() {
 
 
 <canvas width="200" height="200" style="border:1px solid black;" id="thecanvas"></canvas>
+        <img src="dinoback8y.jpg" id="dino"/>
 
 <br/><br/>
 <div id="textdownload" style="display:none;font-style:italic;">Now you can right click and download the image<br/>
